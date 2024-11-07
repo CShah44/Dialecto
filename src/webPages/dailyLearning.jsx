@@ -1,5 +1,7 @@
+import PronounceButton from "../components/PronounceButton.jsx";
 import Layout from "./layout.jsx";
 import { useState } from "react";
+import { PiSpeakerHighFill } from "react-icons/pi";
 
 function DailyLearning() {
   const [cards] = useState([
@@ -99,6 +101,9 @@ function DailyLearning() {
                   <h2 className="text-3xl text-neutral-100 mb-2">
                     {card.spanish}
                   </h2>
+
+                  {/* here */}
+                  <PronounceButton text={card.spanish} language="es-ES" />
                 </div>
                 <div
                   className={`absolute bg-[#051767] text-white w-full h-full rounded-lg shadow-lg p-4 transition-all duration-500 ${
@@ -117,6 +122,11 @@ function DailyLearning() {
                     {card.meaning}
                   </p>
                   <p className="text-lg italic">{card.example}</p>
+
+                  {/* here */}
+                  <div className="absolute bottom-2 right-2 w-10 h-10">
+                    <PiSpeakerHighFill />
+                  </div>
                 </div>
               </div>
             ))}
