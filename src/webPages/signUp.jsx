@@ -23,16 +23,22 @@ const SignUp = () => {
 
     setError("");
     console.log("Sign Up Username:", username, "Password:", password);
-    navigate("/HomePage"); // Redirect to home after sign-up
+    navigate("/home"); // Redirect to home after sign-up
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+    <div
+      className="flex items-center justify-center h-screen font-array"
+      style={{
+        backgroundImage: "url(/backgrounds/bg1.png)",
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="bg-[#090051] border-gray-400 border-[1.5px] p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-4xl mb-6 text-center text-gray-200">Sign Up</h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="flex flex-col">
-          <label className="mb-2 font-medium text-gray-600">Username</label>
+          <label className="mb-2 font-medium text-gray-300">Username</label>
           <input
             type="text"
             value={username}
@@ -42,7 +48,7 @@ const SignUp = () => {
             required
           />
 
-          <label className="mb-2 font-medium text-gray-600">Password</label>
+          <label className="mb-2 font-medium text-gray-300">Password</label>
           <input
             type="password"
             value={password}
@@ -52,7 +58,7 @@ const SignUp = () => {
             required
           />
 
-          <label className="mb-2 font-medium text-gray-600">
+          <label className="mb-2 font-medium text-gray-300">
             Confirm Password
           </label>
           <input
@@ -66,7 +72,7 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
           >
             Sign Up
           </button>
@@ -74,7 +80,7 @@ const SignUp = () => {
 
         {/* Sign In Button */}
         <div className="text-center mt-4">
-          <p className="text-gray-600">Already have an account?</p>
+          <p className="text-gray-500">Already have an account?</p>
           <button
             onClick={() => navigate("/")}
             className="text-blue-500 mt-2 underline hover:text-blue-700"

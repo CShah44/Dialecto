@@ -2,3 +2,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Array";
+  src: url("/src/assets/fonts/Array-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Jersey";
+  src: url("/src/assets/fonts/Jersey20.ttf") format("truetype");
+  /* font-weight: bold; */
+}

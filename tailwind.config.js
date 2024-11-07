@@ -6,7 +6,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        array: ["Array"],
+        jersey: ["Jersey"],
+      }
+    },
   },
   plugins: [],
 };
