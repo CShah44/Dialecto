@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Footer() {
   return (
     <footer className="bg-[#1c4e80] p-1 __className_8cc72f">
@@ -8,14 +10,16 @@ function Footer() {
             href="/"
           >
             <span className="__className_37c115 self-center text-2xl font-semibold whitespace-nowrap text-[#e8f0e5]">
-              Murnify
+              Dialecto
             </span>
           </a>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-[#e8f0e5] sm:mb-0">
             <li>
-              <a href="" className="text-base hover:underline me-4 md:me-9">
-                About Us
-              </a>
+              <Link to="/aboutUs">
+                <a href="" className="text-base hover:underline me-4 md:me-9">
+                  About Us
+                </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -23,7 +27,7 @@ function Footer() {
         <span className="block text-sm text-[#e8f0e5] sm:text-center">
           © 2024{" "}
           <a className="hover:underline me-4 md:me-6" href="/">
-            Murnify™
+            Dialecto™
           </a>{" "}
           All Rights Reserved
         </span>

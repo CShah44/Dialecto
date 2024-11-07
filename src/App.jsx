@@ -7,6 +7,7 @@ import HomePage from "./webPages/homePage.jsx";
 import DailyLearning from "./webPages/dailyLearning.jsx";
 import StoryMode from "./webPages/storyMode.jsx";
 import Scrabble from "./webPages/scrabble.jsx";
+import AboutUs from "./webPages/aboutUs.jsx";
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
 
           {/* Define route for Daily Learning page */}
           <Route path="/scrabble" element={<Scrabble />} />
+
+          {/* Define route for AboutUs page */}
+          <Route path="/aboutUs" element={<AboutUs />} />
         </Routes>
       </div>
     </Router>

@@ -5,7 +5,7 @@ import Layout from "./layout.jsx";
 function HomePage() {
   return (
     <Layout>
-      <div className="flex m-12 h-screen w-[95%] bg-white text-black font-array">
+      <div className="flex m-12 h-screen w-[95%] bg-[#c6c9ff] text-black font-array">
         {/* <!-- Main Container --> */}
         <div className="flex items-start space-x-4 w-[100%]">
           {/* <!-- Left Content Area --> */}
@@ -60,7 +60,31 @@ function HomePage() {
             <h1 className="text-neutral-200 text-2xl p-4 mx-auto">
               Leaderboard
             </h1>
-            <div></div>
+            <div className="w-full px-4 font-jersey">
+              {[
+                { name: "Sarah Johnson", points: 2150, rank: 1 },
+                { name: "Michael Chen", points: 2080, rank: 2 },
+                { name: "Emma Davis", points: 1990, rank: 3 },
+                { name: "Krish Patel", points: 1920, rank: 4 },
+                { name: "Alex Thompson", points: 1875, rank: 5 },
+                { name: "Maria Garcia", points: 1820, rank: 6 },
+                { name: "David Kim", points: 1780, rank: 7 },
+                { name: "Lisa Wang", points: 1750, rank: 8 },
+                { name: "James Wilson", points: 1700, rank: 9 },
+                { name: "Sophia Lee", points: 1650, rank: 10 },
+              ].map((user) => (
+                <div
+                  key={user.rank}
+                  className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-200"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-md">#{user.rank}</span>
+                    <span className="text-md">{user.name}</span>
+                  </div>
+                  <span className="text-md">{user.points}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

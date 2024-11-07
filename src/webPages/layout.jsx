@@ -4,7 +4,7 @@ import Footer from "../components/footer.jsx";
 
 function Layout({ children }) {
   return (
-    <div className="layout">
+    <div className="layout bg-[#c6c9ff]">
       <NavBar />
       <main> {children} </main>
       <Footer />
