@@ -7,7 +7,9 @@ function DailyLearning() {
   const [loading, setLoading] = useState(true);
   const [cards, setCards] = useState([]);
   const [flippedStates, setFlippedStates] = useState(Array(10).fill(false));
-  const { language, user } = useUser();
+  const [scoredCards, setScoredCards] = useState(new Set());
+
+  const { language, user, refreshUserData } = useUser();
 
   const getCards = useCallback(async () => {
     try {
@@ -31,16 +33,52 @@ function DailyLearning() {
       if (data.dailies.cards.length) {
         setCards(data.dailies.cards);
       }
+
+      refreshUserData();
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
-  }, [language, user.username]);
+
+    return 0;
+  }, [language, user.username, refreshUserData]);
 
   useEffect(() => {
     getCards();
   }, [getCards]);
+
+  const incrementScore = async (cardId) => {
+    // Check if this card has already been scored
+    if (scoredCards.has(cardId)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://dialecto.onrender.com/updatescore",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: user.username,
+            language: language,
+            score: 5,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        // Add card to scored set
+        setScoredCards((prev) => new Set(prev).add(cardId));
+        console.log("Score incremented successfully");
+      }
+    } catch (error) {
+      console.error("Error incrementing score:", error);
+    }
+  };
 
   const handleClick = (index) => {
     setFlippedStates((prev) => {
@@ -48,6 +86,9 @@ function DailyLearning() {
       newStates[index] = !newStates[index];
       return newStates;
     });
+
+    // Increment score when card is flipped for the first time
+    incrementScore(cards[index].id || index);
   };
 
   return (
@@ -120,6 +161,7 @@ function DailyLearning() {
                           <p className="text-indigo-900 font-medium mb-2">
                             {card.example}
                           </p>
+                          <p>{card.translation}</p>
                           <div onClick={(e) => e.stopPropagation()}>
                             <PronounceButton
                               text={card.example}

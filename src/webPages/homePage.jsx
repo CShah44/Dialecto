@@ -5,8 +5,8 @@ import { useUser } from "../contexts/UserContext.jsx";
 import { useEffect, useState } from "react";
 
 function HomePage() {
-  const { language, user, updateLanguage } = useUser();
-  const [totalPoints, setTotalPoints] = useState(0);
+  const { language, user, updateLanguage, refreshUserData, totalScore } =
+    useUser();
   const [currentLeaderboard, setCurrentLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,17 +19,6 @@ function HomePage() {
   }, []);
 
   useEffect(() => {
-    const x =
-      user.languages["JAPANESE"] +
-      user.languages["SPANISH"] +
-      user.languages["FRENCH"] +
-      user.languages["ITALIAN"] +
-      user.languages["GERMAN"] +
-      user.languages["TELUGU"] +
-      user.languages["GUJARATI"];
-
-    setTotalPoints(x);
-
     const getLeaderboard = async () => {
       const res = await fetch("https://dialecto.onrender.com/leaderboard", {
         method: "POST",
@@ -42,14 +31,15 @@ function HomePage() {
           username: user.username,
         }),
       });
-
+      console.log(res);
       const data = await res.json();
       setCurrentLeaderboard(data.leaderboard);
       setLoading(false);
     };
 
     getLeaderboard();
-  }, [language, user]);
+    refreshUserData();
+  }, [language, user, refreshUserData]);
 
   return (
     <Layout>
@@ -59,7 +49,7 @@ function HomePage() {
           {/* <!-- Left Content Area --> */}
           <div className="space-y-4 w-[75%]">
             {/* <!-- Banner/Header --> */}
-            <div className="bg-blue-900/70 backdrop-blur-md text-white text-center rounded-lg h-[300px] w-[100%] flex items-center justify-center">
+            <div className="bg-blue-900/70 backdrop-blur-md text-white text-center rounded-lg h-[300px] w-[100%] flex items-center justify-center relative">
               <div className="flex flex-col justify-center items-start gap-4 m-10">
                 <h1 className="text-6xl font-medium">
                   Welcome to Dialecto, {user.username}
@@ -95,10 +85,15 @@ function HomePage() {
                   </select>
                 </div>
                 <div className="flex justify-between text-4xl w-full font-jersey">
-                  <h1>{totalPoints} Points</h1>
+                  <h1>{totalScore} Points</h1>
                   {/* <h1>Rank #124</h1> */}
                 </div>
               </div>
+              <Link to="/pixey">
+                <button className="absolute bottom-6 right-6 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-md backdrop-blur-sm border border-white/30 transition-all text-2xl">
+                  Pixey
+                </button>
+              </Link>
             </div>
 
             {/* <!-- Content Boxes --> */}
@@ -144,7 +139,7 @@ function HomePage() {
               </div>
             )}
             <div className="w-full px-4 font-jersey">
-              {currentLeaderboard.map((user) => (
+              {currentLeaderboard?.map((user) => (
                 <div
                   key={user.rank}
                   className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-900 hover:scale-105"

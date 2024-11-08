@@ -10,6 +10,7 @@ import DailyLearning from "./webPages/dailyLearning.jsx";
 import StoryMode from "./webPages/storyMode.jsx";
 import MemoryGame from "./webPages/memoryGame.jsx";
 import AboutUs from "./webPages/aboutUs.jsx";
+import Pixey from "./webPages/pixey.jsx";
 
 function App() {
   return (
@@ -52,6 +53,14 @@ function App() {
               element={
                 // <ProtectedRoute>
                 <MemoryGame />
+                // </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pixey"
+              element={
+                // <ProtectedRoute>
+                <Pixey />
                 // </ProtectedRoute>
               }
             />

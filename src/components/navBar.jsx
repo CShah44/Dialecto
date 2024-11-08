@@ -30,6 +30,13 @@ function NavBar() {
             {/* Right Section: Navigation and Profile */}
             <div className="flex items-center gap-8">
               {/* Navigation Links */}
+              <Link to="/pixey">
+                <div className="flex font-jersey items-center gap-8">
+                  <div className="text-[#e8f0e5] font-medium cursor-pointer transition-colors duration-300 hover:text-[#99cceb] text-2xl">
+                    Pixey
+                  </div>
+                </div>
+              </Link>
               <Link to="/aboutUs">
                 <div className="flex font-jersey items-center gap-8">
                   <div className="text-[#e8f0e5] font-medium cursor-pointer transition-colors duration-300 hover:text-[#99cceb] text-2xl">

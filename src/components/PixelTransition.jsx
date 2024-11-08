@@ -17,7 +17,6 @@ const anim = {
 
 export default function index({ dimensions }) {
   const { width, height } = dimensions;
-  console.log(width, height);
 
   /**
    * Shuffles array in place (Fisher–Yates shuffle).

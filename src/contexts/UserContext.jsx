@@ -5,8 +5,9 @@ const UserContext = createContext();
 // eslint-disable-next-line react/prop-types
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [languageCode, setLanguageCode] = useState("hi-IN");
-  const [language, setLanguage] = useState();
+  const [totalScore, setTotalScore] = useState(0);
+  const [languageCode, setLanguageCode] = useState("es-ES");
+  const [language, setLanguage] = useState("Spanish");
 
   useEffect(() => {
     const storedLanguage = localStorage.getItem("language");
@@ -17,11 +18,13 @@ export const UserProvider = ({ children }) => {
       localStorage.setItem("language", "Spanish");
     }
 
+    updateLanguage(language);
+
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, []);
+  }, [language]);
 
   const login = async (username, password) => {
     const res = await fetch("https://dialecto.onrender.com/login", {
@@ -60,6 +63,7 @@ export const UserProvider = ({ children }) => {
 
     if (res.ok) {
       setUser(null);
+      setTotalScore(0);
       localStorage.removeItem("user");
     } else {
       console.error("Logout failed");
@@ -94,10 +98,6 @@ export const UserProvider = ({ children }) => {
   const updateLanguage = (newLanguage) => {
     if (newLanguage === "Japanese") {
       setLanguageCode("ja-JP");
-    } else if (newLanguage === "Telugu") {
-      setLanguageCode("hi-IN");
-    } else if (newLanguage === "Gujarati") {
-      setLanguageCode("hi-IN");
     } else if (newLanguage === "Spanish") {
       setLanguageCode("es-ES");
     } else if (newLanguage === "French") {
@@ -106,12 +106,46 @@ export const UserProvider = ({ children }) => {
       setLanguageCode("it-IT");
     } else if (newLanguage === "German") {
       setLanguageCode("de-DE");
+    } else if (newLanguage === "Gujarati") {
+      setLanguageCode("gu-IN");
+    } else if (newLanguage === "Telugu") {
+      setLanguageCode("te-IN");
     } else {
       setLanguageCode("en-US");
     }
 
     setLanguage(newLanguage);
     localStorage.setItem("language", newLanguage);
+  };
+
+  const refreshUserData = async () => {
+    try {
+      const response = await fetch("https://dialecto.onrender.com/getscores", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: user.username,
+          language,
+        }),
+      });
+      if (response.ok) {
+        const newScores = await response.json();
+
+        const x =
+          newScores.languages["FRENCH"] +
+          newScores.languages["SPANISH"] +
+          newScores.languages["JAPANESE"] +
+          newScores.languages["GERMAN"] +
+          newScores.languages["ITALIAN"] +
+          newScores.languages["TELUGU"] +
+          newScores.languages["GUJARATI"];
+        setTotalScore(x);
+      }
+    } catch (error) {
+      console.error("Error refreshing user data:", error);
+    }
   };
 
   const value = {
@@ -122,6 +156,8 @@ export const UserProvider = ({ children }) => {
     logout,
     signup,
     updateLanguage,
+    refreshUserData,
+    totalScore,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
