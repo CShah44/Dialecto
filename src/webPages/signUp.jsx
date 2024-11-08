@@ -7,6 +7,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { username: user, signup } = useUser();
 
@@ -31,7 +32,9 @@ const SignUp = () => {
 
     setError("");
 
+    setIsLoading(true);
     await signup(username, password);
+    setIsLoading(false);
 
     navigate("/home"); // Redirect to home after sign-up
   };
@@ -82,9 +85,11 @@ const SignUp = () => {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
           >
-            Sign Up
+            Sign Up{" "}
+            {isLoading && <span className="ml-2 animate-pulse">🚀</span>}
           </button>
         </form>
 

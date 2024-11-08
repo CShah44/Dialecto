@@ -7,6 +7,16 @@ import { useEffect, useState } from "react";
 function HomePage() {
   const { language, user, updateLanguage } = useUser();
   const [totalPoints, setTotalPoints] = useState(0);
+  const [currentLeaderboard, setCurrentLeaderboard] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setInterval(() => {
+      fetch("https://dialecto.onrender.com/health").then((response) =>
+        response.json()
+      );
+    }, 100000);
+  }, []);
 
   useEffect(() => {
     const x =
@@ -19,7 +29,27 @@ function HomePage() {
       user.languages["GUJARATI"];
 
     setTotalPoints(x);
-  }, [user]);
+
+    const getLeaderboard = async () => {
+      const res = await fetch("https://dialecto.onrender.com/leaderboard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${user.access_token}`,
+        },
+        body: JSON.stringify({
+          language,
+          username: user.username,
+        }),
+      });
+
+      const data = await res.json();
+      setCurrentLeaderboard(data.leaderboard);
+      setLoading(false);
+    };
+
+    getLeaderboard();
+  }, [language, user]);
 
   return (
     <Layout>
@@ -35,7 +65,7 @@ function HomePage() {
                   Welcome to Dialecto, {user.username}
                 </h1>
                 <div className="flex space-x-2 items-center">
-                  <span>Select Language:</span>
+                  <span>Which language do you want to learn?</span>
                   <select
                     value={language}
                     onChange={(e) => updateLanguage(e.target.value)}
@@ -66,7 +96,7 @@ function HomePage() {
                 </div>
                 <div className="flex justify-between text-4xl w-full font-jersey">
                   <h1>{totalPoints} Points</h1>
-                  <h1>Rank #124</h1>
+                  {/* <h1>Rank #124</h1> */}
                 </div>
               </div>
             </div>
@@ -94,7 +124,7 @@ function HomePage() {
               <Link to="/memoryGame">
                 <div
                   style={{
-                    backgroundImage: "url(/buttons/scrabble.png)",
+                    backgroundImage: "url(/buttons/memory.png)",
                     backgroundSize: "cover",
                   }}
                   className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
@@ -108,26 +138,20 @@ function HomePage() {
             <h1 className="text-neutral-900 text-2xl p-4 mx-auto">
               Leaderboard
             </h1>
+            {loading && (
+              <div className="flex justify-center items-center h-full">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+              </div>
+            )}
             <div className="w-full px-4 font-jersey">
-              {[
-                { name: "Sarah Johnson", points: 2150, rank: 1 },
-                { name: "Michael Chen", points: 2080, rank: 2 },
-                { name: "Emma Davis", points: 1990, rank: 3 },
-                { name: "Krish Patel", points: 1920, rank: 4 },
-                { name: "Alex Thompson", points: 1875, rank: 5 },
-                { name: "Maria Garcia", points: 1820, rank: 6 },
-                { name: "David Kim", points: 1780, rank: 7 },
-                { name: "Lisa Wang", points: 1750, rank: 8 },
-                { name: "James Wilson", points: 1700, rank: 9 },
-                { name: "Sophia Lee", points: 1650, rank: 10 },
-              ].map((user) => (
+              {currentLeaderboard.map((user) => (
                 <div
                   key={user.rank}
                   className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-900 hover:scale-105"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-md">#{user.rank}</span>
-                    <span className="text-md">{user.name}</span>
+                    <span className="text-md">{user.username}</span>
                   </div>
                   <span className="text-md">{user.points}</span>
                 </div>

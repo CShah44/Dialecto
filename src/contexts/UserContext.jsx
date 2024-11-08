@@ -5,7 +5,7 @@ const UserContext = createContext();
 // eslint-disable-next-line react/prop-types
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [languageCode, setLanguageCode] = useState("ja-JP");
+  const [languageCode, setLanguageCode] = useState("hi-IN");
   const [language, setLanguage] = useState();
 
   useEffect(() => {
@@ -13,7 +13,8 @@ export const UserProvider = ({ children }) => {
     if (storedLanguage) {
       setLanguage(storedLanguage);
     } else {
-      setLanguage("Japanese");
+      setLanguage("Spanish");
+      localStorage.setItem("language", "Spanish");
     }
 
     const storedUser = localStorage.getItem("user");
@@ -94,9 +95,9 @@ export const UserProvider = ({ children }) => {
     if (newLanguage === "Japanese") {
       setLanguageCode("ja-JP");
     } else if (newLanguage === "Telugu") {
-      setLanguageCode("te-IN");
+      setLanguageCode("hi-IN");
     } else if (newLanguage === "Gujarati") {
-      setLanguageCode("gu-IN");
+      setLanguageCode("hi-IN");
     } else if (newLanguage === "Spanish") {
       setLanguageCode("es-ES");
     } else if (newLanguage === "French") {

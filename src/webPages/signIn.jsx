@@ -9,6 +9,7 @@ const SignIn = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { user, login } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -25,7 +26,9 @@ const SignIn = () => {
 
     setError("");
 
+    setIsLoading(true);
     await login(username, password);
+    setIsLoading(false);
 
     // Navigate to the home page
     navigate("/home");
@@ -63,9 +66,11 @@ const SignIn = () => {
           />
           <button
             type="submit"
+            disabled={isLoading}
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
           >
-            Sign In
+            Sign In{" "}
+            {isLoading && <span className="ml-2 animate-pulse">🚀</span>}
           </button>
         </form>
         {/* Sign Up Button */}

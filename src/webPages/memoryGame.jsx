@@ -1,19 +1,6 @@
 import Layout from "./layout.jsx";
 
-// function Scrabble() {
-//   return (
-//     <>
-//       <Layout>
-//         <div className="h-screen">
-//           <p>Welcome to Scrabble!</p>
-//         </div>
-//       </Layout>
-//     </>
-//   );
-// }
-
-// export default Scrabble;
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const wordPairs = [
   ["perro", "dog"],
@@ -28,21 +15,24 @@ const wordPairs = [
   ["leche", "milk"],
 ];
 
+// eslint-disable-next-line react/prop-types
 const Card = ({ word, isFlipped, isMatched, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className={`aspect-[3/4] cursor-pointer perspective-1000 relative transform-style-preserve-3d transition-transform duration-500 ${
+      className={`aspect-square cursor-pointer perspective-1000 relative transform-style-preserve-3d transition-transform duration-500 ${
         isFlipped ? "rotate-y-180" : ""
       }`}
     >
-      <div className="absolute w-full h-full backface-hidden bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 transition-colors"></div>
+      <div className="absolute w-full h-full backface-hidden  rounded-lg shadow-lg bg-blue-900/70 hover:bg-blue-900/80 hover:scale-105 backdrop-blur-md  transition-colors"></div>
       <div
         className={`absolute w-full h-full backface-hidden rotate-y-180 rounded-lg flex items-center justify-center p-2 text-center shadow-lg ${
-          isMatched ? "bg-green-500 text-white" : "bg-white text-gray-800"
+          isMatched
+            ? "bg-green-500/95 text-white"
+            : "bg-white/60 backdrop-blur-md text-black"
         }`}
       >
-        <span className="text-lg font-medium">{word}</span>
+        <span className="text-2xl font-medium">{word}</span>
       </div>
     </div>
   );
@@ -162,17 +152,20 @@ const MemoryGame = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-[75%] mx-auto p-6 font-jersey">
         <div className="flex justify-between items-center mb-6">
-          <div className="text-xl font-bold">Time: {formatTime(time)}</div>
+          <div className="text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl p-2 backdrop-blur-md">
+            Time: {formatTime(time)}
+          </div>
           <button
             onClick={initializeGame}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium"
+            // className="bg-blue-500 text-2xl text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            className="text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl px-6 py-2 backdrop-blur-md"
           >
             Restart Game
           </button>
         </div>
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-5 gap-8">
           {cards.map((card) => (
             <Card
               key={card.id}
@@ -184,15 +177,15 @@ const MemoryGame = () => {
           ))}
         </div>
         {!isGameActive && matchedPairs === wordPairs.length && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg text-center">
-              <h2 className="text-2xl font-bold mb-4">Congratulations! 🎉</h2>
-              <p className="text-lg">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+            <div className="bg-white/90 backdrop-blur-md p-8 rounded-lg text-center shadow-xl transform scale-100 transition-all">
+              <h2 className="text-3xl font-bold mb-4">Congratulations! 🎉</h2>
+              <p className="text-xl">
                 You completed the game in {formatTime(time)}!
               </p>
               <button
                 onClick={initializeGame}
-                className="mt-6 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                className="mt-6 bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium text-lg"
               >
                 Play Again
               </button>

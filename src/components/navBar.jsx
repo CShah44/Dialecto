@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 // import React, { useState } from "react";
 
 function NavBar() {
+  const { logout } = useUser();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   return (
     <div>
-      <header className="bg-blue-900/70 backdrop-blur-md py-2 pb-4 font-array sticky top-0 w-full z-10">
+      <header className="bg-blue-900/85 backdrop-blur-md py-2 pb-4 font-array sticky top-0 w-full z-10">
         <div className="max-w-full mx-auto px-8">
           <nav className="flex items-center justify-between gap-5">
             {/* Left Section: Logo and Brand Name */}
@@ -32,13 +39,11 @@ function NavBar() {
               </Link>
 
               {/* Profile Section */}
-              <Link to="/">
-                <div className="flex items-center gap-5">
-                  <button className="text-white font-jersey border border-white px-4 py-1 rounded-full transition duration-300 hover:bg-[#960909] hover:text-white text-lg">
-                    Logout
-                  </button>
-                </div>
-              </Link>
+              <div onClick={handleLogout} className="flex items-center gap-5">
+                <button className="text-white font-jersey border border-white px-4 py-1 rounded-full transition duration-300 hover:bg-[#960909] hover:text-white text-lg">
+                  Logout
+                </button>
+              </div>
             </div>
           </nav>
         </div>
