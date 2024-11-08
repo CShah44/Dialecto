@@ -1,14 +1,15 @@
 // src/App.jsx
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { UserProvider } from "./contexts/UserContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import SignIn from "./webPages/signIn.jsx";
 import SignUp from "./webPages/signUp.jsx";
 import HomePage from "./webPages/homePage.jsx";
 import DailyLearning from "./webPages/dailyLearning.jsx";
 import StoryMode from "./webPages/storyMode.jsx";
-import Scrabble from "./webPages/scrabble.jsx";
+import MemoryGame from "./webPages/memoryGame.jsx";
 import AboutUs from "./webPages/aboutUs.jsx";
-import { UserProvider } from "./contexts/UserContext.jsx";
 
 function App() {
   return (
@@ -16,26 +17,44 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            {/* Define route for Sign In page */}
+            {/* Public routes */}
             <Route path="/" element={<SignIn />} />
-
-            {/* Define route for Sign Up page */}
             <Route path="/signup" element={<SignUp />} />
-
-            {/* Define route for Home page (after sign in or sign up) */}
-            <Route path="/home" element={<HomePage />} />
-
-            {/* Define route for Daily Learning page */}
-            <Route path="/dailyLearning" element={<DailyLearning />} />
-
-            {/* Define route for StoryMode page */}
-            <Route path="/storyMode" element={<StoryMode />} />
-
-            {/* Define route for Daily Learning page */}
-            <Route path="/scrabble" element={<Scrabble />} />
-
-            {/* Define route for AboutUs page */}
             <Route path="/aboutUs" element={<AboutUs />} />
+
+            {/* Protected routes */}
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dailyLearning"
+              element={
+                <ProtectedRoute>
+                  <DailyLearning />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/storyMode"
+              element={
+                <ProtectedRoute>
+                  <StoryMode />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/memoryGame"
+              element={
+                // <ProtectedRoute>
+                <MemoryGame />
+                // </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </Router>

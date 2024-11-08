@@ -1,7 +1,6 @@
 import PronounceButton from "../components/PronounceButton.jsx";
 import Layout from "./layout.jsx";
 import { useState } from "react";
-import { PiSpeakerHighFill } from "react-icons/pi";
 
 function DailyLearning() {
   const [cards] = useState([
@@ -66,7 +65,6 @@ function DailyLearning() {
       example: "Necesito agua, por favor.",
     },
   ]);
-
   const [flippedStates, setFlippedStates] = useState(Array(10).fill(false));
 
   const handleClick = (index) => {
@@ -78,62 +76,88 @@ function DailyLearning() {
   };
 
   return (
-    <>
-      <Layout>
-        <div className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-jersey">
-            {cards.map((card, index) => (
+    <Layout>
+      <div className="p-12 min-h-screen font-jersey">
+        {/* <h1 className="text-4xl font-bold text-center mb-8 text-indigo-900">
+          Daily Spanish Words
+        </h1> */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {cards.map((card, index) => (
+            <div
+              key={index}
+              className="relative h-80"
+              style={{ perspective: "1000px" }}
+              onClick={() => handleClick(index)}
+            >
               <div
-                key={index}
-                className="relative h-64 cursor-pointer"
-                onClick={() => handleClick(index)}
+                className={`absolute w-full h-full transition-transform duration-70 cursor-pointer`}
+                style={{
+                  transformStyle: "preserve-3d",
+                  transform: flippedStates[index]
+                    ? "rotateY(180deg)"
+                    : "rotateY(0deg)",
+                }}
               >
+                {/* Front of card */}
                 <div
-                  className={`absolute bg-[#271082] w-full h-full rounded-lg shadow-lg p-4 transition-all duration-500 ${
-                    flippedStates[index] ? "opacity-0" : "opacity-100"
-                  }`}
-                  style={{
-                    transform: flippedStates[index]
-                      ? "rotateY(180deg)"
-                      : "rotateY(0deg)",
-                  }}
+                  className="absolute w-full h-full rounded-xl bg-blue-900/70 backdrop-blur-md p-6 shadow-xl"
+                  style={{ backfaceVisibility: "hidden" }}
                 >
-                  <h2 className="text-3xl text-neutral-100 mb-2">
-                    {card.spanish}
-                  </h2>
-
-                  {/* here */}
-                  <PronounceButton text={card.spanish} language="es-ES" />
+                  <div className="flex flex-col h-full justify-between">
+                    <h2 className="text-4xl font-bold text-white mb-4">
+                      {card.spanish}
+                    </h2>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-indigo-200">
+                        Click to flip
+                      </span>
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="z-10"
+                      >
+                        <PronounceButton
+                          text={card.spanish}
+                          colour="text-white"
+                        ></PronounceButton>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Back of card */}
                 <div
-                  className={`absolute bg-[#051767] text-white w-full h-full rounded-lg shadow-lg p-4 transition-all duration-500 ${
-                    flippedStates[index] ? "opacity-100" : "opacity-0"
-                  }`}
+                  className="absolute w-full h-full rounded-xl bg-neutral-200/70 backdrop-blur-md p-6 shadow-xl"
                   style={{
-                    transform: flippedStates[index]
-                      ? "rotateY(0deg)"
-                      : "rotateY(-180deg)",
+                    backfaceVisibility: "hidden",
+                    transform: "rotateY(180deg)",
                   }}
                 >
-                  <h3 className="text-3xl font-semibold mb-2">
-                    {card.english}
-                  </h3>
-                  <p className="text-2xl text-neutral-200 mb-2">
-                    {card.meaning}
-                  </p>
-                  <p className="text-lg italic">{card.example}</p>
-
-                  {/* here */}
-                  <div className="absolute bottom-2 right-2 w-10 h-10">
-                    <PiSpeakerHighFill />
+                  <div className="flex flex-col h-full">
+                    <h3 className="text-3xl font-bold text-indigo-900 mb-2">
+                      {card.english}
+                    </h3>
+                    <p className="text-indigo-700 mb-4">{card.meaning}</p>
+                    <div className="mt-auto">
+                      <div className="bg-indigo-50 p-3 rounded-lg">
+                        <p className="text-indigo-900 font-medium mb-2">
+                          {card.example}
+                        </p>
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <PronounceButton
+                            text={card.example}
+                            colour="text-indigo-900"
+                          ></PronounceButton>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </Layout>
-    </>
+      </div>
+    </Layout>
   );
 }
 

@@ -2,9 +2,24 @@
 import { Link } from "react-router-dom";
 import Layout from "./layout.jsx";
 import { useUser } from "../contexts/UserContext.jsx";
+import { useEffect, useState } from "react";
 
 function HomePage() {
-  const { language } = useUser();
+  const { language, user, updateLanguage } = useUser();
+  const [totalPoints, setTotalPoints] = useState(0);
+
+  useEffect(() => {
+    const x =
+      user.languages["JAPANESE"] +
+      user.languages["SPANISH"] +
+      user.languages["FRENCH"] +
+      user.languages["ITALIAN"] +
+      user.languages["GERMAN"] +
+      user.languages["TELUGU"] +
+      user.languages["GUJARATI"];
+
+    setTotalPoints(x);
+  }, [user]);
 
   return (
     <Layout>
@@ -14,14 +29,43 @@ function HomePage() {
           {/* <!-- Left Content Area --> */}
           <div className="space-y-4 w-[75%]">
             {/* <!-- Banner/Header --> */}
-            <div className="bg-blue-900 text-white text-center rounded-lg h-[300px] w-[100%] flex items-center justify-center">
+            <div className="bg-blue-900/70 backdrop-blur-md text-white text-center rounded-lg h-[300px] w-[100%] flex items-center justify-center">
               <div className="flex flex-col justify-center items-start gap-4 m-10">
                 <h1 className="text-6xl font-medium">
-                  Welcome to Dialecto, Krish Patel
+                  Welcome to Dialecto, {user.username}
                 </h1>
-                <h2>Selected Language: {language}</h2>
+                <div className="flex space-x-2 items-center">
+                  <span>Select Language:</span>
+                  <select
+                    value={language}
+                    onChange={(e) => updateLanguage(e.target.value)}
+                    className="px-4 py-2 text-white rounded-md bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all"
+                  >
+                    <option value="Telugu" className="text-black">
+                      Telugu
+                    </option>
+                    <option value="Gujarati" className="text-black">
+                      Gujarati
+                    </option>
+                    <option value="Spanish" className="text-black">
+                      Spanish
+                    </option>
+                    <option value="French" className="text-black">
+                      French
+                    </option>
+                    <option value="Italian" className="text-black">
+                      Italian
+                    </option>
+                    <option value="German" className="text-black">
+                      German
+                    </option>
+                    <option value="Japanese" className="text-black">
+                      Japanese
+                    </option>
+                  </select>
+                </div>
                 <div className="flex justify-between text-4xl w-full font-jersey">
-                  <h1>1920 Points</h1>
+                  <h1>{totalPoints} Points</h1>
                   <h1>Rank #124</h1>
                 </div>
               </div>
@@ -47,7 +91,7 @@ function HomePage() {
                   className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
                 ></div>
               </Link>
-              <Link to="/scrabble">
+              <Link to="/memoryGame">
                 <div
                   style={{
                     backgroundImage: "url(/buttons/scrabble.png)",
@@ -60,8 +104,8 @@ function HomePage() {
           </div>
 
           {/* <!-- Sidebar --> */}
-          <div className="bg-blue-900 rounded-lg shadow-md w-[25%] h-[80%] flex flex-col justify-start items-center">
-            <h1 className="text-neutral-200 text-2xl p-4 mx-auto">
+          <div className="bg-neutral-200/70 backdrop-blur-md rounded-lg shadow-md w-[25%] h-[80%] flex flex-col justify-start items-center">
+            <h1 className="text-neutral-900 text-2xl p-4 mx-auto">
               Leaderboard
             </h1>
             <div className="w-full px-4 font-jersey">
@@ -79,7 +123,7 @@ function HomePage() {
               ].map((user) => (
                 <div
                   key={user.rank}
-                  className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-200 hover:scale-105"
+                  className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-900 hover:scale-105"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-md">#{user.rank}</span>

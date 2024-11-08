@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 const SignUp = () => {
   const [username, setUsername] = useState(""); // Keeping only username state
@@ -7,8 +8,15 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { username: user, signup } = useUser();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username || !password || !confirmPassword) {
@@ -22,7 +30,9 @@ const SignUp = () => {
     }
 
     setError("");
-    console.log("Sign Up Username:", username, "Password:", password);
+
+    await signup(username, password);
+
     navigate("/home"); // Redirect to home after sign-up
   };
 

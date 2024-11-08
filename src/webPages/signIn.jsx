@@ -1,14 +1,22 @@
 // src/SignIn.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 const SignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { user, login } = useUser();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
       setError("Please fill in both fields");
@@ -16,7 +24,8 @@ const SignIn = () => {
     }
 
     setError("");
-    console.log("Username:", username, "Password:", password);
+
+    await login(username, password);
 
     // Navigate to the home page
     navigate("/home");

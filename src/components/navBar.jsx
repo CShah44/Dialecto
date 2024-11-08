@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function NavBar() {
   return (
     <div>
-      <header className="bg-[#08294a] py-2 pb-4 font-array sticky top-0 w-full z-10">
+      <header className="bg-blue-900/70 backdrop-blur-md py-2 pb-4 font-array sticky top-0 w-full z-10">
         <div className="max-w-full mx-auto px-8">
           <nav className="flex items-center justify-between gap-5">
             {/* Left Section: Logo and Brand Name */}

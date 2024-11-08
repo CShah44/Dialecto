@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="bg-[#08294a] p-1 __className_8cc72f font-array">
+    <footer className="bg-blue-900/70 backdrop-blur-md p-1 __className_8cc72f font-array">
       <div className="w-full max-w-screen-xl mx-auto p-0 md:py-3">
         <div className="sm:flex sm:items-center sm:justify-between">
           <a
