@@ -104,7 +104,7 @@ function DailyLearning() {
             {cards.map((card, index) => (
               <div
                 key={index}
-                className="relative h-80"
+                className="relative h-80 hover:scale-105"
                 style={{ perspective: "1000px" }}
                 onClick={() => handleClick(index)}
               >

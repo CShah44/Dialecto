@@ -24,7 +24,7 @@ const Card = ({ word, isFlipped, isMatched, onClick }) => {
         isFlipped ? "rotate-y-180" : ""
       }`}
     >
-      <div className="absolute w-full h-full backface-hidden  rounded-lg shadow-lg bg-blue-900/70 hover:bg-blue-900/80 hover:scale-105 backdrop-blur-md  transition-colors"></div>
+      <div className="absolute w-full h-full backface-hidden rounded-lg shadow-lg bg-blue-900/70 hover:bg-blue-900/80 hover:scale-105 backdrop-blur-md transition-colors"></div>
       <div
         className={`absolute w-full h-full backface-hidden rotate-y-180 rounded-lg flex items-center justify-center p-2 text-center shadow-lg ${
           isMatched
@@ -32,7 +32,9 @@ const Card = ({ word, isFlipped, isMatched, onClick }) => {
             : "bg-white/60 backdrop-blur-md text-black"
         }`}
       >
-        <span className="text-2xl font-medium">{word}</span>
+        <span className="text-base sm:text-lg md:text-2xl font-medium">
+          {word}
+        </span>
       </div>
     </div>
   );
@@ -152,20 +154,19 @@ const MemoryGame = () => {
 
   return (
     <Layout>
-      <div className="max-w-[75%] mx-auto p-6 font-jersey">
-        <div className="flex justify-between items-center mb-6">
-          <div className="text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl p-2 backdrop-blur-md">
+      <div className="max-w-[95%] sm:max-w-[85%] md:max-w-[75%] mx-auto p-3 sm:p-4 md:p-6 font-jersey">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 md:mb-6 gap-3">
+          <div className="text-xl sm:text-2xl md:text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl p-2 backdrop-blur-md">
             Time: {formatTime(time)}
           </div>
           <button
             onClick={initializeGame}
-            // className="bg-blue-500 text-2xl text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            className="text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl px-6 py-2 backdrop-blur-md"
+            className="text-xl sm:text-2xl md:text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl px-4 py-2 backdrop-blur-md"
           >
             Restart Game
           </button>
         </div>
-        <div className="grid grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4 md:gap-8">
           {cards.map((card) => (
             <Card
               key={card.id}

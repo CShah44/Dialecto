@@ -43,24 +43,26 @@ function HomePage() {
 
   return (
     <Layout>
-      <div className="flex m-12 h-screen w-[95%] bg-none text-black font-array">
-        {/* <!-- Main Container --> */}
-        <div className="flex items-start space-x-4 w-[100%]">
-          {/* <!-- Left Content Area --> */}
-          <div className="space-y-4 w-[75%]">
-            {/* <!-- Banner/Header --> */}
-            <div className="bg-blue-900/70 backdrop-blur-md text-white text-center rounded-lg h-[300px] w-[100%] flex items-center justify-center relative">
-              <div className="flex flex-col justify-center items-start gap-4 m-10">
-                <h1 className="text-6xl font-medium">
+      <div className="flex p-4 md:p-12 min-h-screen w-full bg-none text-black font-array">
+        <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-4 w-full">
+          {/* Left Content Area */}
+          <div className="space-y-4 w-full md:w-[75%]">
+            {/* Banner/Header */}
+            <div className="bg-blue-900/70 backdrop-blur-md text-white rounded-lg p-6 md:h-[300px] w-full flex flex-col justify-center">
+              <div className="flex flex-col gap-4">
+                <h1 className="text-3xl md:text-6xl font-medium">
                   Welcome to Dialecto, {user.username}
                 </h1>
-                <div className="flex space-x-2 items-center">
-                  <span>Which language do you want to learn?</span>
+                <div className="flex flex-col md:flex-row md:space-x-2 items-start md:items-center gap-2">
+                  <span className="text-lg">
+                    Which language do you want to learn?
+                  </span>
                   <select
                     value={language}
                     onChange={(e) => updateLanguage(e.target.value)}
-                    className="px-4 py-2 text-white rounded-md bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all"
+                    className="px-4 py-2 text-white rounded-md bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all w-full md:w-auto"
                   >
+                    {/* ... existing options ... */}
                     <option value="Telugu" className="text-black">
                       Telugu
                     </option>
@@ -84,74 +86,77 @@ function HomePage() {
                     </option>
                   </select>
                 </div>
-                <div className="flex justify-between text-4xl w-full font-jersey">
+                <div className="flex justify-between text-2xl md:text-4xl w-full font-jersey">
                   <h1>{totalScore} Points</h1>
-                  {/* <h1>Rank #124</h1> */}
                 </div>
               </div>
-              <Link to="/pixey">
-                <button className="absolute bottom-6 right-6 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-md backdrop-blur-sm border border-white/30 transition-all text-2xl">
+              <Link
+                to="/pixey"
+                className="mt-4 md:absolute md:bottom-6 md:right-6"
+              >
+                <button className="w-full md:w-auto px-6 py-3 bg-white/20 hover:bg-white/30 rounded-md backdrop-blur-sm border border-white/30 transition-all text-xl md:text-2xl">
                   Pixey
                 </button>
               </Link>
             </div>
 
-            {/* <!-- Content Boxes --> */}
-            <div className="flex space-x-4 flex-row justify-between w-[100%]">
-              <Link to="/dailyLearning">
+            {/* Content Boxes */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Link
+                to="/dailyLearning"
+                className="transform transition-transform hover:scale-105"
+              >
                 <div
-                  className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
-                  style={{
-                    backgroundImage: "url(/buttons/daily.png)",
-                    backgroundSize: "cover",
-                  }}
+                  className="aspect-square rounded-lg shadow-lg bg-cover bg-center"
+                  style={{ backgroundImage: "url(/buttons/daily.png)" }}
                 ></div>
               </Link>
-              <Link to="/storyMode">
+              <Link
+                to="/storyMode"
+                className="transform transition-transform hover:scale-105"
+              >
                 <div
-                  style={{
-                    backgroundImage: "url(/buttons/story.png)",
-                    backgroundSize: "cover",
-                  }}
-                  className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
+                  className="aspect-square rounded-lg shadow-lg bg-cover bg-center"
+                  style={{ backgroundImage: "url(/buttons/story.png)" }}
                 ></div>
               </Link>
-              <Link to="/memoryGame">
+              <Link
+                to="/memoryGame"
+                className="transform transition-transform hover:scale-105"
+              >
                 <div
-                  style={{
-                    backgroundImage: "url(/buttons/memory.png)",
-                    backgroundSize: "cover",
-                  }}
-                  className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
+                  className="aspect-square rounded-lg shadow-lg bg-cover bg-center"
+                  style={{ backgroundImage: "url(/buttons/memory.png)" }}
                 ></div>
               </Link>
             </div>
           </div>
 
-          {/* <!-- Sidebar --> */}
-          <div className="bg-neutral-200/70 backdrop-blur-md rounded-lg shadow-md w-[25%] h-[80%] flex flex-col justify-start items-center">
+          {/* Leaderboard Sidebar */}
+          <div className="bg-neutral-200/70 backdrop-blur-md rounded-lg shadow-md w-full md:w-[25%] h-[80vh] flex flex-col">
             <h1 className="text-neutral-900 text-2xl p-4 mx-auto">
               Leaderboard
             </h1>
-            {loading && (
+            {loading ? (
               <div className="flex justify-center items-center h-full">
                 <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
               </div>
-            )}
-            <div className="w-full px-4 font-jersey">
-              {currentLeaderboard?.map((user) => (
-                <div
-                  key={user.rank}
-                  className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-900 hover:scale-105"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-md">#{user.rank}</span>
-                    <span className="text-md">{user.username}</span>
+            ) : (
+              <div className="w-full px-4 font-jersey overflow-y-auto">
+                {currentLeaderboard?.map((user) => (
+                  <div
+                    key={user.rank}
+                    className="flex justify-between items-center py-3 border-b border-neutral-500 text-neutral-900 hover:bg-neutral-300/50 rounded-md px-2 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-md">#{user.rank}</span>
+                      <span className="text-md">{user.username}</span>
+                    </div>
+                    <span className="text-md font-bold">{user.points}</span>
                   </div>
-                  <span className="text-md">{user.points}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
