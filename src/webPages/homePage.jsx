@@ -1,11 +1,14 @@
 // src/HomePage.jsx
 import { Link } from "react-router-dom";
 import Layout from "./layout.jsx";
+import { useUser } from "../contexts/UserContext.jsx";
 
 function HomePage() {
+  const { language } = useUser();
+
   return (
     <Layout>
-      <div className="flex m-12 h-screen w-[95%] bg-[#c6c9ff] text-black font-array">
+      <div className="flex m-12 h-screen w-[95%] bg-none text-black font-array">
         {/* <!-- Main Container --> */}
         <div className="flex items-start space-x-4 w-[100%]">
           {/* <!-- Left Content Area --> */}
@@ -16,6 +19,7 @@ function HomePage() {
                 <h1 className="text-6xl font-medium">
                   Welcome to Dialecto, Krish Patel
                 </h1>
+                <h2>Selected Language: {language}</h2>
                 <div className="flex justify-between text-4xl w-full font-jersey">
                   <h1>1920 Points</h1>
                   <h1>Rank #124</h1>
@@ -27,7 +31,7 @@ function HomePage() {
             <div className="flex space-x-4 flex-row justify-between w-[100%]">
               <Link to="/dailyLearning">
                 <div
-                  className="shadow-md aspect-square h-[325px] flex items-center justify-center"
+                  className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
                   style={{
                     backgroundImage: "url(/buttons/daily.png)",
                     backgroundSize: "cover",
@@ -40,7 +44,7 @@ function HomePage() {
                     backgroundImage: "url(/buttons/story.png)",
                     backgroundSize: "cover",
                   }}
-                  className="shadow-md aspect-square h-[325px] flex items-center justify-center"
+                  className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
                 ></div>
               </Link>
               <Link to="/scrabble">
@@ -49,7 +53,7 @@ function HomePage() {
                     backgroundImage: "url(/buttons/scrabble.png)",
                     backgroundSize: "cover",
                   }}
-                  className="shadow-md aspect-square h-[325px] flex items-center justify-center"
+                  className="shadow-md aspect-square h-[325px] flex items-center justify-center rounded-lg hover:scale-105"
                 ></div>
               </Link>
             </div>
@@ -75,7 +79,7 @@ function HomePage() {
               ].map((user) => (
                 <div
                   key={user.rank}
-                  className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-200"
+                  className="flex justify-between items-center py-2 border-b border-neutral-500 text-neutral-200 hover:scale-105"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-md">#{user.rank}</span>

@@ -8,9 +8,16 @@ function NavBar() {
         <div className="max-w-full mx-auto px-8">
           <nav className="flex items-center justify-between gap-5">
             {/* Left Section: Logo and Brand Name */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-end gap-5">
               {/* Logo */}
-              <h1 className="text-[#e8f0e5] font-medium text-5xl">Dialecto</h1>
+              <Link to="/home">
+                <h1 className="text-[#e8f0e5] font-medium text-5xl">
+                  Dialecto
+                </h1>
+              </Link>
+              <span className="text-[#e8f0e5] font-light text-2xl font-jersey">
+                a new learning experience
+              </span>
             </div>
 
             {/* Right Section: Navigation and Profile */}
@@ -25,11 +32,13 @@ function NavBar() {
               </Link>
 
               {/* Profile Section */}
-              <div className="flex items-center gap-5">
-                <button className="text-white font-jersey border border-white px-4 py-1 rounded transition duration-300 hover:bg-[#960909] hover:text-white text-lg">
-                  Logout
-                </button>
-              </div>
+              <Link to="/">
+                <div className="flex items-center gap-5">
+                  <button className="text-white font-jersey border border-white px-4 py-1 rounded-full transition duration-300 hover:bg-[#960909] hover:text-white text-lg">
+                    Logout
+                  </button>
+                </div>
+              </Link>
             </div>
           </nav>
         </div>
