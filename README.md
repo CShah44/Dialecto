@@ -92,7 +92,7 @@ Start the development server
 [Dialecto-BK](https://github.com/melohub-xbit/DIALECTO-BK)
 ## Demo
 
-https://youtu.be/JYfF9HESuS8
+https://youtu.be/celR6rwV5z8
 
 ## Deployment
 
