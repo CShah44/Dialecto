@@ -3,6 +3,7 @@ import Layout from "./layout.jsx";
 import { FaArrowRight, FaMicrophoneLines } from "react-icons/fa6";
 import { useUser } from "../contexts/UserContext.jsx";
 import { toast } from "react-hot-toast";
+import PronounceButton from "../components/PronounceButton.jsx";
 
 function StoryMode() {
   const [transcript, setTranscript] = useState("");
@@ -26,7 +27,7 @@ function StoryMode() {
           body: JSON.stringify({
             username: user.username,
             language: language,
-            score: 15,
+            score: 5,
           }),
         }
       );
@@ -229,6 +230,7 @@ function StoryMode() {
                 <div className="flex justify-center space-x-8 px-10">
                   {/* Left Dialog Box */}
                   <div className="w-1/2 bg-neutral-200 bg-opacity-90 rounded-lg p-6 shadow-lg">
+                    <PronounceButton text={storyPart.content} />
                     <div className="text-3xl mb-4 text-gray-900">
                       {storyPart.content}
                     </div>

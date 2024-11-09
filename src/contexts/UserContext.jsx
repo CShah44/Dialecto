@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
+// import toast from "react-hot-toast";
 
 const UserContext = createContext();
 
@@ -39,8 +40,7 @@ export const UserProvider = ({ children }) => {
     // console.log(res);
 
     if (!res.ok) {
-      console.error("Login failed");
-      return;
+      throw new Error("Login failed");
     }
 
     const data = await res.json();
@@ -83,8 +83,7 @@ export const UserProvider = ({ children }) => {
     // console.log(res);
 
     if (!res.ok) {
-      console.error("Signup failed");
-      return;
+      throw new Error("Signup failed");
     }
 
     const data = await res.json();

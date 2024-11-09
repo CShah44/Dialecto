@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const [username, setUsername] = useState(""); // Keeping only username state
@@ -33,7 +34,11 @@ const SignUp = () => {
     setError("");
 
     setIsLoading(true);
-    await signup(username, password);
+    try {
+      await signup(username, password);
+    } catch (error) {
+      toast.error("Could not register");
+    }
     setIsLoading(false);
 
     navigate("/home"); // Redirect to home after sign-up

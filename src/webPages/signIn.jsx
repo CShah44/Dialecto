@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import toast from "react-hot-toast";
 
 const SignIn = () => {
   const [username, setUsername] = useState("");
@@ -27,7 +28,11 @@ const SignIn = () => {
     setError("");
 
     setIsLoading(true);
-    await login(username, password);
+    try {
+      await login(username, password);
+    } catch (error) {
+      toast.error("Invalid username or password");
+    }
     setIsLoading(false);
 
     // Navigate to the home page
