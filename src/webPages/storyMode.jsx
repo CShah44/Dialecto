@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Layout from "./layout.jsx";
 import { FaArrowRight, FaMicrophoneLines } from "react-icons/fa6";
 import { useUser } from "../contexts/UserContext.jsx";
+import { toast } from "react-hot-toast";
 
 function StoryMode() {
   const [transcript, setTranscript] = useState("");
@@ -35,6 +36,7 @@ function StoryMode() {
       }
     } catch (error) {
       console.error("Error incrementing score:", error);
+      toast.error(error.message || "Error incrementing score!");
     }
   };
 
@@ -95,6 +97,7 @@ function StoryMode() {
       }
     } catch (error) {
       console.error(error);
+      toast.error(error.message || "Error");
     } finally {
       setLoading(false);
     }
@@ -157,6 +160,7 @@ function StoryMode() {
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.message || "Error");
     } finally {
       setLoading(false);
     }
@@ -178,7 +182,8 @@ function StoryMode() {
       const result = await response.blob();
       return result;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error.message || "Error");
     }
   }
 

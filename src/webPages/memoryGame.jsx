@@ -1,19 +1,7 @@
+import { useUser } from "../contexts/UserContext.jsx";
 import Layout from "./layout.jsx";
-
+import { toast } from "react-hot-toast";
 import { useState, useEffect } from "react";
-
-const wordPairs = [
-  ["perro", "dog"],
-  ["gato", "cat"],
-  ["casa", "house"],
-  ["libro", "book"],
-  ["árbol", "tree"],
-  ["sol", "sun"],
-  ["luna", "moon"],
-  ["agua", "water"],
-  ["pan", "bread"],
-  ["leche", "milk"],
-];
 
 // eslint-disable-next-line react/prop-types
 const Card = ({ word, isFlipped, isMatched, onClick }) => {
@@ -48,10 +36,9 @@ const MemoryGame = () => {
   const [time, setTime] = useState(0);
   const [isGameActive, setIsGameActive] = useState(false);
   const [hasGameStarted, setHasGameStarted] = useState(false);
-
-  useEffect(() => {
-    initializeGame();
-  }, []);
+  const [wordPairs, setWordPairs] = useState([]);
+  const { user, language } = useUser();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let timer;
@@ -63,22 +50,49 @@ const MemoryGame = () => {
     return () => clearInterval(timer);
   }, [isGameActive]);
 
-  const initializeGame = () => {
-    const allWords = wordPairs.flat();
-    const shuffledWords = [...allWords].sort(() => Math.random() - 0.5);
-    setCards(
-      shuffledWords.map((word, index) => ({
+  const fetchAndInitializeGame = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("https://dialecto.onrender.com/memorypairs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          language,
+          username: user.username,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch word pairs");
+
+      const data = await res.json();
+      if (!data.words?.pairs?.length) throw new Error("No word pairs received");
+
+      const pairs = data.words.pairs;
+      setWordPairs(pairs);
+
+      const allWords = pairs.flat();
+      const shuffledWords = [...allWords].sort(() => Math.random() - 0.5);
+
+      const newCards = shuffledWords.map((word, index) => ({
         id: index,
         word,
         isFlipped: false,
         isMatched: false,
-      }))
-    );
-    setFlippedCards([]);
-    setMatchedPairs(0);
-    setTime(0);
-    setIsGameActive(false);
-    setHasGameStarted(false);
+      }));
+
+      setCards(newCards);
+      setFlippedCards([]);
+      setMatchedPairs(0);
+      setTime(0);
+      setIsGameActive(false);
+      setHasGameStarted(false);
+    } catch (error) {
+      toast.error(error.message || "Failed to initialize game");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCardClick = (clickedCard) => {
@@ -92,31 +106,32 @@ const MemoryGame = () => {
       flippedCards.includes(clickedCard) ||
       clickedCard.isMatched ||
       flippedCards.length === 2
-    ) {
+    )
       return;
-    }
 
     const newCards = cards.map((card) =>
       card.id === clickedCard.id ? { ...card, isFlipped: true } : card
     );
     setCards(newCards);
-    setFlippedCards([...flippedCards, clickedCard]);
 
-    if (flippedCards.length === 1) {
+    const updatedFlippedCards = [...flippedCards, clickedCard];
+    setFlippedCards(updatedFlippedCards);
+
+    if (updatedFlippedCards.length === 2) {
       setIsLocked(true);
-      const [firstCard] = flippedCards;
+      const [firstCard, secondCard] = updatedFlippedCards;
 
       const isMatch = wordPairs.some(
         (pair) =>
           pair.includes(firstCard.word) &&
-          pair.includes(clickedCard.word) &&
-          firstCard.word !== clickedCard.word
+          pair.includes(secondCard.word) &&
+          firstCard.word !== secondCard.word
       );
 
       if (isMatch) {
         setTimeout(() => {
           const matchedCards = cards.map((card) =>
-            card.id === firstCard.id || card.id === clickedCard.id
+            card.id === firstCard.id || card.id === secondCard.id
               ? { ...card, isMatched: true, isFlipped: true }
               : card
           );
@@ -127,12 +142,14 @@ const MemoryGame = () => {
 
           if (matchedPairs + 1 === wordPairs.length) {
             setIsGameActive(false);
+            // Add score increment here - can adjust the score value as needed
+            incrementScore();
           }
         }, 500);
       } else {
         setTimeout(() => {
           const resetCards = cards.map((card) =>
-            card.id === firstCard.id || card.id === clickedCard.id
+            card.id === firstCard.id || card.id === secondCard.id
               ? { ...card, isFlipped: false }
               : card
           );
@@ -144,6 +161,32 @@ const MemoryGame = () => {
     }
   };
 
+  const incrementScore = async () => {
+    try {
+      const response = await fetch(
+        "https://dialecto.onrender.com/updatescore",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: user.username,
+            language: language,
+            score: 5,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Score incremented successfully");
+      }
+    } catch (error) {
+      console.error("Error incrementing score:", error);
+      toast.error(error.message || "Error incrementing score!");
+    }
+  };
+
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -152,48 +195,58 @@ const MemoryGame = () => {
       .padStart(2, "0")}`;
   };
 
+  useEffect(() => {
+    fetchAndInitializeGame();
+  }, []);
+
   return (
     <Layout>
-      <div className="max-w-[95%] sm:max-w-[85%] md:max-w-[75%] mx-auto p-3 sm:p-4 md:p-6 font-jersey">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 md:mb-6 gap-3">
-          <div className="text-xl sm:text-2xl md:text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl p-2 backdrop-blur-md">
-            Time: {formatTime(time)}
-          </div>
-          <button
-            onClick={initializeGame}
-            className="text-xl sm:text-2xl md:text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl px-4 py-2 backdrop-blur-md"
-          >
-            Restart Game
-          </button>
+      {loading ? (
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-[20px] border-b-[20px] border-white"></div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4 md:gap-8">
-          {cards.map((card) => (
-            <Card
-              key={card.id}
-              word={card.word}
-              isFlipped={card.isFlipped}
-              isMatched={card.isMatched}
-              onClick={() => handleCardClick(card)}
-            />
-          ))}
-        </div>
-        {!isGameActive && matchedPairs === wordPairs.length && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-            <div className="bg-white/90 backdrop-blur-md p-8 rounded-lg text-center shadow-xl transform scale-100 transition-all">
-              <h2 className="text-3xl font-bold mb-4">Congratulations! 🎉</h2>
-              <p className="text-xl">
-                You completed the game in {formatTime(time)}!
-              </p>
-              <button
-                onClick={initializeGame}
-                className="mt-6 bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium text-lg"
-              >
-                Play Again
-              </button>
+      ) : (
+        <div className="max-w-[95%] sm:max-w-[85%] md:max-w-[75%] mx-auto p-3 sm:p-4 md:p-6 font-jersey">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4 md:mb-6 gap-3">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl p-2 backdrop-blur-md">
+              Time: {formatTime(time)}
             </div>
+            <button
+              onClick={fetchAndInitializeGame}
+              className="text-xl sm:text-2xl md:text-3xl font-bold bg-white/40 hover:bg-white/60 rounded-xl px-4 py-2 backdrop-blur-md"
+            >
+              Restart Game
+            </button>
           </div>
-        )}
-      </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-4 md:gap-8">
+            {cards.map((card) => (
+              <Card
+                key={card.id}
+                word={card.word}
+                isFlipped={card.isFlipped}
+                isMatched={card.isMatched}
+                onClick={() => handleCardClick(card)}
+              />
+            ))}
+          </div>
+          {!isGameActive && matchedPairs === wordPairs.length && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+              <div className="bg-white/90 backdrop-blur-md p-8 rounded-lg text-center shadow-xl transform scale-100 transition-all">
+                <h2 className="text-3xl font-bold mb-4">Congratulations! 🎉</h2>
+                <p className="text-xl">
+                  You completed the game in {formatTime(time)}!
+                </p>
+                <button
+                  onClick={fetchAndInitializeGame}
+                  className="mt-6 bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium text-lg"
+                >
+                  Play Again
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </Layout>
   );
 };

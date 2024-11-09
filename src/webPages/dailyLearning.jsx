@@ -2,6 +2,7 @@ import PronounceButton from "../components/PronounceButton.jsx";
 import { useUser } from "../contexts/UserContext.jsx";
 import Layout from "./layout.jsx";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 function DailyLearning() {
   const [loading, setLoading] = useState(true);
@@ -36,7 +37,8 @@ function DailyLearning() {
 
       refreshUserData();
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      toast.error(error.message || "Error loading daily learning cards");
     } finally {
       setLoading(false);
     }
@@ -76,7 +78,8 @@ function DailyLearning() {
         console.log("Score incremented successfully");
       }
     } catch (error) {
-      console.error("Error incrementing score:", error);
+      // console.error("Error incrementing score:", error);
+      toast.error(error.message || "Failed to update score");
     }
   };
 
