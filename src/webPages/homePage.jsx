@@ -12,9 +12,9 @@ function HomePage() {
 
   useEffect(() => {
     setInterval(() => {
-      // fetch("https://dialecto.onrender.com/health").then((response) =>
-      //   response.json()
-      // );
+      fetch("https://dialecto.onrender.com/health").then((response) =>
+         response.json()
+      );
     }, 100000);
   }, []);
 
