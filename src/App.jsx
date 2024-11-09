@@ -51,17 +51,17 @@ function App() {
             <Route
               path="/memoryGame"
               element={
-                // <ProtectedRoute>
-                <MemoryGame />
-                // </ProtectedRoute>
+                <ProtectedRoute>
+                  <MemoryGame />
+                </ProtectedRoute>
               }
             />
             <Route
               path="/pixey"
               element={
-                // <ProtectedRoute>
-                <Pixey />
-                // </ProtectedRoute>
+                <ProtectedRoute>
+                  <Pixey />
+                </ProtectedRoute>
               }
             />
           </Routes>
