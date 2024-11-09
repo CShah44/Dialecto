@@ -20,10 +20,10 @@ function NavBar() {
                 <h1 className="text-[#e8f0e5] font-medium text-3xl md:text-5xl">
                   Dialecto
                 </h1>
-                <div className="text-[#e8f0e5] font-medium text-xl md:text-3xl">
+              </Link>
+              <div className="text-[#e8f0e5] font-medium text-xl md:text-3xl">
                   English or Spanish?
                 </div>
-              </Link>
             </div>
 
             {/* Right Section: Navigation and Profile */}
