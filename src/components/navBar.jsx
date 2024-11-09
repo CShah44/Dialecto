@@ -21,7 +21,7 @@ function NavBar() {
                   Dialecto
                 </h1>
               </Link>
-              <div className="text-[#e8f0e5] font-medium text-xl md:text-3xl">
+              <div className="text-[#e8f0e5] font-small text-md md:text-xl">
                   English or Spanish?
                 </div>
             </div>
