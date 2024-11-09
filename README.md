@@ -101,4 +101,9 @@ https://dialecto-nine.vercel.app/
 - [Chaitya Shah](https://github.com/CShah44)
 - [Krish Patel](https://github.com/kodercrish)
 - [Krishna Sai](https://github.com/melohub-xbit)
+- 
+
+### Note
+
+Due to the free tier of render.com on which the backend is deployed, due to inactivity the deployment is shut down occasionally. So the requests might take quite longer than expected. We apologise for this, but we couldn't find a better option to deploy.
 
