@@ -11,10 +11,12 @@ import StoryMode from "./webPages/storyMode.jsx";
 import MemoryGame from "./webPages/memoryGame.jsx";
 import AboutUs from "./webPages/aboutUs.jsx";
 import Pixey from "./webPages/pixey.jsx";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <UserProvider>
+      <Toaster />
       <Router>
         <div className="App">
           <Routes>

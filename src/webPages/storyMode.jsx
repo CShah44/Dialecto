@@ -26,17 +26,18 @@ function StoryMode() {
           body: JSON.stringify({
             username: user.username,
             language: language,
-            score: 50,
+            score: 15,
           }),
         }
       );
 
       if (response.ok) {
-        console.log("Score incremented successfully");
+        toast.success("Score incremented successfully!");
+        refreshUserData();
       }
     } catch (error) {
       console.error("Error incrementing score:", error);
-      toast.error(error.message || "Error incrementing score!");
+      toast.error("Error incrementing score!");
     }
   };
 
@@ -63,14 +64,14 @@ function StoryMode() {
       });
 
       if (!res.ok) {
-        console.log(res);
+        // console.log(res);
         throw new Error("Error fetching cards");
       }
 
-      console.log(res);
+      // console.log(res);
       const data = await res.json();
 
-      console.log(data);
+      // console.log(data);
 
       if (data.next_part) {
         setStoryPart(data.next_part);
@@ -82,7 +83,7 @@ function StoryMode() {
         const url = URL.createObjectURL(im);
         setImage(url);
 
-        console.log(url);
+        // console.log(url);
       }
 
       if (data.current_feedback) {
@@ -97,7 +98,7 @@ function StoryMode() {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.message || "Error");
+      toast.error("Sorry. Coud not fetch story part. Try again.");
     } finally {
       setLoading(false);
     }
@@ -112,7 +113,7 @@ function StoryMode() {
 
     recognition.onresult = async function (event) {
       const transcript = event.results[0][0].transcript;
-      console.log(transcript);
+      // console.log(transcript);
       setTranscript(transcript);
       setMicActive(false);
     };
@@ -122,30 +123,32 @@ function StoryMode() {
     recognition.start();
   }
 
-  const startStory = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`https://dialecto.onrender.com/storystart`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          language,
-          username: user.username,
-        }),
-      });
+  const startStory = useCallback(
+    async (retryCount = 3) => {
+      try {
+        setLoading(true);
+        const res = await fetch(`https://dialecto.onrender.com/storystart`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            language,
+            username: user.username,
+          }),
+        });
 
-      if (!res.ok) {
-        throw new Error("Error fetching story");
-      }
+        if (!res.ok) {
+          throw new Error("Error fetching story");
+        }
 
-      const data = await res.json();
-      console.log(data);
+        const data = await res.json();
 
-      if (data?.current_part) {
+        if (!data?.current_part) {
+          throw new Error("No story part received");
+        }
+
         setStoryPart(data.current_part);
-
         const im = await query({
           inputs:
             "Generate pixel art style image for:" +
@@ -153,19 +156,19 @@ function StoryMode() {
         });
         const url = URL.createObjectURL(im);
         setImage(url);
-
-        console.log(url);
-
-        return;
+      } catch (error) {
+        if (retryCount > 0) {
+          toast("Getting your story ready...");
+          setTimeout(() => startStory(retryCount - 1), 1500);
+        } else {
+          toast.error("Unable to start story. Please try again.");
+        }
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message || "Error");
-    } finally {
-      setLoading(false);
-    }
-  }, [language, user.username]);
-
+    },
+    [language, user.username]
+  );
   async function query(data) {
     try {
       const response = await fetch(
@@ -183,7 +186,7 @@ function StoryMode() {
       return result;
     } catch (error) {
       // console.log(error);
-      toast.error(error.message || "Error");
+      toast.error("Sorry. Image generation failed. Try again.");
     }
   }
 
@@ -200,7 +203,7 @@ function StoryMode() {
             <div
               className="absolute inset-0 bg-cover bg-center z-0"
               style={{
-                backgroundImage: `url(${image || "/backgrounds/bg1.png"})`,
+                backgroundImage: `url(${image || ""})`,
               }}
             />
 

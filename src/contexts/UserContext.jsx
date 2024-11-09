@@ -11,14 +11,12 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const storedLanguage = localStorage.getItem("language");
+    // console.log(storedLanguage);
     if (storedLanguage) {
-      setLanguage(storedLanguage);
+      updateLanguage(storedLanguage);
     } else {
-      setLanguage("Spanish");
-      localStorage.setItem("language", "Spanish");
+      updateLanguage("Spanish");
     }
-
-    updateLanguage(language);
 
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -38,7 +36,7 @@ export const UserProvider = ({ children }) => {
       }),
     });
 
-    console.log(res);
+    // console.log(res);
 
     if (!res.ok) {
       console.error("Login failed");
@@ -59,7 +57,7 @@ export const UserProvider = ({ children }) => {
       },
     });
 
-    console.log(res);
+    // console.log(res);
 
     if (res.ok) {
       setUser(null);
@@ -82,7 +80,7 @@ export const UserProvider = ({ children }) => {
       }),
     });
 
-    console.log(res);
+    // console.log(res);
 
     if (!res.ok) {
       console.error("Signup failed");

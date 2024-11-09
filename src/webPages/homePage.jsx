@@ -13,7 +13,7 @@ function HomePage() {
   useEffect(() => {
     setInterval(() => {
       fetch("https://dialecto.onrender.com/health").then((response) =>
-         response.json()
+        response.json()
       );
     }, 100000);
   }, []);
@@ -31,7 +31,7 @@ function HomePage() {
           username: user.username,
         }),
       });
-      console.log(res);
+      // console.log(res);
       const data = await res.json();
       setCurrentLeaderboard(data.leaderboard);
       setLoading(false);

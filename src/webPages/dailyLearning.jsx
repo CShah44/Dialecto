@@ -12,44 +12,52 @@ function DailyLearning() {
 
   const { language, user, refreshUserData } = useUser();
 
-  const getCards = useCallback(async () => {
-    try {
-      console.log("Fetching cards...");
-      const res = await fetch("https://dialecto.onrender.com/dailies", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          language,
-          username: user.username,
-        }),
-      });
+  const getCards = useCallback(
+    async (retryCount = 3) => {
+      try {
+        // console.log("Fetching cards...");
+        toast("Fetching cards...");
+        const res = await fetch("https://dialecto.onrender.com/dailies", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            language,
+            username: user.username,
+          }),
+        });
 
-      if (!res.ok) {
-        throw new Error("Error fetching cards");
+        if (!res.ok) {
+          throw new Error("Error fetching cards");
+        }
+
+        const data = await res.json();
+        if (data.dailies.cards.length) {
+          setCards(data.dailies.cards);
+          refreshUserData();
+        } else {
+          throw new Error("No cards received");
+        }
+      } catch (error) {
+        if (retryCount > 0) {
+          toast.loading("Retrying to fetch cards...");
+          setTimeout(() => getCards(retryCount - 1), 1500);
+        } else {
+          toast.error(
+            "Unable to load learning cards. Please refresh the page."
+          );
+        }
+      } finally {
+        setLoading(false);
       }
-
-      const data = await res.json();
-      if (data.dailies.cards.length) {
-        setCards(data.dailies.cards);
-      }
-
-      refreshUserData();
-    } catch (error) {
-      // console.error(error);
-      toast.error(error.message || "Error loading daily learning cards");
-    } finally {
-      setLoading(false);
-    }
-
-    return 0;
-  }, [language, user.username, refreshUserData]);
+    },
+    [language, user.username, refreshUserData]
+  );
 
   useEffect(() => {
     getCards();
   }, [getCards]);
-
   const incrementScore = async (cardId) => {
     // Check if this card has already been scored
     if (scoredCards.has(cardId)) {
@@ -67,7 +75,7 @@ function DailyLearning() {
           body: JSON.stringify({
             username: user.username,
             language: language,
-            score: 5,
+            score: 1,
           }),
         }
       );
@@ -75,11 +83,11 @@ function DailyLearning() {
       if (response.ok) {
         // Add card to scored set
         setScoredCards((prev) => new Set(prev).add(cardId));
-        console.log("Score incremented successfully");
+        toast.success("Score incremented successfully");
       }
     } catch (error) {
       // console.error("Error incrementing score:", error);
-      toast.error(error.message || "Failed to update score");
+      toast.error("Failed to update score");
     }
   };
 
@@ -127,7 +135,7 @@ function DailyLearning() {
                   >
                     <div className="flex flex-col h-full justify-between">
                       <h2 className="text-4xl font-bold text-white mb-4">
-                        {card.new_concept}
+                        {card.new_concept} • {card.concept_pronunciation}
                       </h2>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-indigo-200">
@@ -162,7 +170,7 @@ function DailyLearning() {
                       <div className="mt-auto">
                         <div className="bg-indigo-50 p-3 rounded-lg">
                           <p className="text-indigo-900 font-medium mb-2">
-                            {card.example}
+                            {card.example} • {card.example_pronunciation}
                           </p>
                           <p>{card.translation}</p>
                           <div onClick={(e) => e.stopPropagation()}>
